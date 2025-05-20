@@ -62,3 +62,4 @@ The application will be available at `http://localhost:3000`.
 
 This project is licensed under the MIT License - see the LICENSE file for details. # PrepPal
 # PrepPal
+# PrepPal
