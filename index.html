@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrepPal - Simple Meal Planner</title>
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            width: 100%;
+            max-width: 800px;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .pantry-section {
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        #pantry-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        #pantry-list li {
+            padding: 1rem;
+            background-color: var(--background);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+        #pantry-list li button {
+            padding: 0.5rem 1rem;
+            background-color: #ef4444;
+            font-size: 0.875rem;
+        }
+
+        #pantry-list li button:hover {
+            background-color: #dc2626;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Add a subtle gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .recipe-section {
+            display: none;
+            margin-top: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .recipe-section.active {
+            display: block;
+        }
+
+        .recipe-card {
+            background: var(--background);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s ease;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .recipe-title {
+            color: var(--primary-color);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .recipe-ingredients {
+            margin-bottom: 1rem;
+        }
+
+        .recipe-ingredients h4 {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .recipe-ingredients ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .recipe-ingredients li {
+            background: var(--card-bg);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .recipe-instructions {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PrepPal</h1>
+        
+        <div class="pantry-section">
+            <h2>My Pantry</h2>
+            <div class="input-group">
+                <input type="text" id="ingredient-input" placeholder="Add an ingredient...">
+                <button onclick="addIngredient()">Add</button>
+            </div>
+            <ul id="pantry-list"></ul>
+            <div class="nav-buttons">
+                <button onclick="showRecipes()" id="next-button">Next →</button>
+            </div>
+        </div>
+
+        <div class="recipe-section" id="recipe-section">
+            <h2>Recipe Suggestions</h2>
+            <div id="recipe-list"></div>
+            <div class="nav-buttons">
+                <button onclick="showPantry()">← Back to Pantry</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Recipe database
+        const recipes = [
+            {
+                name: "Pasta with Tomato Sauce",
+                ingredients: ["pasta", "tomato sauce", "garlic", "olive oil"],
+                instructions: "1. Cook pasta according to package instructions\n2. Heat olive oil in a pan\n3. Add minced garlic and cook until fragrant\n4. Add tomato sauce and simmer\n5. Combine with pasta"
+            },
+            {
+                name: "Simple Stir Fry",
+                ingredients: ["rice", "vegetables", "soy sauce", "oil"],
+                instructions: "1. Cook rice according to package instructions\n2. Heat oil in a wok or large pan\n3. Add vegetables and stir fry until tender\n4. Add soy sauce and stir\n5. Serve over rice"
+            },
+            {
+                name: "Grilled Cheese Sandwich",
+                ingredients: ["bread", "cheese", "butter"],
+                instructions: "1. Butter both slices of bread\n2. Add cheese between the slices\n3. Grill until golden and cheese is melted"
+            },
+            {
+                name: "Scrambled Eggs",
+                ingredients: ["eggs", "butter", "salt", "pepper"],
+                instructions: "1. Beat eggs in a bowl\n2. Heat butter in a pan\n3. Add eggs and stir gently\n4. Season with salt and pepper"
+            }
+        ];
+
+        function addIngredient() {
+            const input = document.getElementById('ingredient-input');
+            const list = document.getElementById('pantry-list');
+            
+            if (input.value.trim() !== '') {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${input.value}</span>
+                    <button onclick="this.parentElement.remove()">Remove</button>
+                `;
+                list.appendChild(li);
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function getPantryItems() {
+            const items = [];
+            document.querySelectorAll('#pantry-list li span').forEach(span => {
+                items.push(span.textContent.toLowerCase());
+            });
+            return items;
+        }
+
+        function findMatchingRecipes(pantryItems) {
+            return recipes.filter(recipe => {
+                const recipeIngredients = recipe.ingredients.map(i => i.toLowerCase());
+                return recipeIngredients.every(ingredient => 
+                    pantryItems.some(pantryItem => pantryItem.includes(ingredient))
+                );
+            });
+        }
+
+        function showRecipes() {
+            const pantryItems = getPantryItems();
+            const matchingRecipes = findMatchingRecipes(pantryItems);
+            const recipeList = document.getElementById('recipe-list');
+            const recipeSection = document.getElementById('recipe-section');
+            const pantrySection = document.querySelector('.pantry-section');
+
+            recipeList.innerHTML = '';
+            
+            if (matchingRecipes.length === 0) {
+                recipeList.innerHTML = '<p>No recipes found with your current pantry items. Try adding more ingredients!</p>';
+            } else {
+                matchingRecipes.forEach(recipe => {
+                    const recipeCard = document.createElement('div');
+                    recipeCard.className = 'recipe-card';
+                    recipeCard.innerHTML = `
+                        <h3 class="recipe-title">${recipe.name}</h3>
+                        <div class="recipe-ingredients">
+                            <h4>Ingredients</h4>
+                            <ul>
+                                ${recipe.ingredients.map(ingredient => 
+                                    `<li>${ingredient}</li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+                        <div class="recipe-instructions">
+                            <h4>Instructions</h4>
+                            <p>${recipe.instructions}</p>
+                        </div>
+                    `;
+                    recipeList.appendChild(recipeCard);
+                });
+            }
+
+            pantrySection.style.display = 'none';
+            recipeSection.classList.add('active');
+        }
+
+        function showPantry() {
+            const recipeSection = document.getElementById('recipe-section');
+            const pantrySection = document.querySelector('.pantry-section');
+
+            recipeSection.classList.remove('active');
+            pantrySection.style.display = 'block';
+        }
+
+        // Allow adding ingredients with Enter key
+        document.getElementById('ingredient-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addIngredient();
+            }
+        });
+    </script>
+</body>
+</html> 
